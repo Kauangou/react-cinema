@@ -11,7 +11,7 @@ ingressos.
 
 O diagrama a seguir descreve a modelagem proposta para o sistema, incluindo as entidades e seus relacionamentos principais:
 
-![digrama UML](diagramaUML.png)
+![Digrama UML](frontend/src/assets/diagramaUML.png)
 
 ## 🎯 Objetivo Geral
 
