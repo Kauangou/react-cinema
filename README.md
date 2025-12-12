@@ -1,83 +1,188 @@
-# 📽️ CineWeb -- Módulo Administrativo
+# Sistema CineWeb - Sistema de Gerenciamento de Cinema (React + TypeScript)
 
-Este documento apresenta uma visão geral do módulo administrativo do
-sistema **CineWeb**, desenvolvido com **React**, **Vite** e
-**TypeScript**, com o apoio de **JSON-Server** para simulação de uma API
-REST. O objetivo do sistema é auxiliar a gestão interna de um cinema,
-permitindo o cadastro e controle de filmes, salas, sessões e vendas de
-ingressos.
-
-## 📊 Diagrama UML
-
-O diagrama a seguir descreve a modelagem proposta para o sistema, incluindo as entidades e seus relacionamentos principais:
-
-![Digrama UML](frontend/src/assets/diagramaUML.png)
-
-## 🎯 Objetivo Geral
-
-O projeto tem como finalidade disponibilizar um módulo administrativo
-que permita a operadores e gerentes registrarem e organizarem as
-informações essenciais do cinema. Isso inclui os cadastros de filmes e
-salas, o agendamento de sessões e o controle básico de vendas de
-ingressos.
+Este projeto é um sistema completo de gerenciamento de cinema desenvolvido com **React**, **TypeScript**, **Vite**, **Bootstrap** e **json-server**.
 
 ## 🚀 Tecnologias Utilizadas
 
-- **React + Vite (TypeScript)**
-- **React Router DOM**
-- **Bootstrap + Bootstrap Icons**
-- **Zod**
-- **JSON-Server**
+- **React 19** - Biblioteca para construção de interfaces
+- **TypeScript** - Superset tipado do JavaScript
+- **Vite** - Build tool e dev server
+- **React Router DOM** - Roteamento SPA
+- **Bootstrap 5** - Framework CSS
+- **Bootstrap Icons** - Biblioteca de ícones
+- **Zod** - Validação de schemas e formulários
+- **json-server** - API REST simulada
 
-## 🗄️ Estrutura do Backend (db.json)
+## 📋 Funcionalidades
+
+### 1. Cadastro de Filmes
+- Cadastrar filmes com título, sinopse, gênero, classificação, duração, elenco e período de exibição
+- Editar e excluir filmes
+- Validação com Zod:
+  - Título obrigatório
+  - Duração deve ser número positivo
+  - Sinopse com mínimo de 10 caracteres
+
+### 2. Cadastro de Salas
+- Cadastrar salas com nome, capacidade e tipo (2D, 3D, IMAX)
+- Editar e excluir salas
+- Validação com Zod
+
+### 3. Cadastro de Sessões
+- Cadastrar sessões vinculando filme e sala
+- Definir data e hora da sessão
+- Editar e excluir sessões
+- Validação com Zod:
+  - Filme e sala obrigatórios
+  - Data da sessão não pode ser retroativa
+
+### 4. Venda de Ingressos
+- Selecionar sessão, tipo (inteira/meia) e quantidade
+- Cálculo automático de valores
+- Valores: Inteira R$ 28,00 | Meia R$ 14,00
+
+### 5. Listagem de Sessões
+- Visualização pública de sessões disponíveis
+- Agrupadas por filme
+- Botão para comprar ingressos
+
+## 🗂️ Estrutura do Projeto
+
+```
+frontend/
+├── src/
+│   ├── components/
+│   │   └── Navigation.tsx          # Barra de navegação
+│   ├── pages/
+│   │   ├── Home.tsx                # Página inicial
+│   │   ├── Filmes.tsx              # CRUD de filmes
+│   │   ├── Salas.tsx               # CRUD de salas
+│   │   ├── Sessoes.tsx             # CRUD de sessões
+│   │   ├── Ingressos.tsx           # Venda de ingressos
+│   │   └── ListarSessoes.tsx       # Listagem pública
+│   ├── schemas/
+│   │   └── index.ts                # Schemas Zod para validação
+│   ├── services/
+│   │   └── api.ts                  # Serviço de API
+│   ├── types/
+│   │   └── index.ts                # Tipos TypeScript
+│   ├── utils/
+│   │   └── index.ts                # Funções utilitárias
+│   ├── App.tsx                     # Componente principal
+│   └── main.tsx                    # Entry point
+├── db.json                         # Banco de dados JSON
+└── package.json
+```
+
+## 🔧 Instalação e Configuração
+
+### Pré-requisitos
+- Node.js (versão 20.12 ou superior)
+- npm ou yarn
+
+### Passo 1: Instalar Dependências
+```bash
+cd frontend
+npm install
+```
+
+### Passo 2: Iniciar o JSON Server (Terminal 1)
+```bash
+npm run server
+```
+O servidor estará disponível em `http://localhost:3000`
+
+### Passo 3: Iniciar o Vite Dev Server (Terminal 2)
+```bash
+npm run dev
+```
+A aplicação estará disponível em `http://localhost:5173`
+
+## 📊 Estrutura do db.json
 
 ```json
 {
-  "filmes": [],
-  "salas": [],
-  "sessoes": [],
-  "ingressos": []
+  "filmes": [
+    {
+      "id": "uuid",
+      "titulo": "string",
+      "sinopse": "string",
+      "genero": "string",
+      "classificacao": "L|10|12|14|16|18",
+      "duracao": "number",
+      "elenco": "string",
+      "dataInicio": "YYYY-MM-DD",
+      "dataFim": "YYYY-MM-DD"
+    }
+  ],
+  "salas": [
+    {
+      "id": "uuid",
+      "nome": "string",
+      "capacidade": "number",
+      "tipo": "2D|3D|IMAX"
+    }
+  ],
+  "sessoes": [
+    {
+      "id": "uuid",
+      "filmeId": "uuid",
+      "salaId": "uuid",
+      "dataHora": "YYYY-MM-DDTHH:mm"
+    }
+  ],
+  "ingressos": [
+    {
+      "id": "uuid",
+      "sessaoId": "uuid",
+      "tipo": "inteira|meia",
+      "quantidade": "number",
+      "valorTotal": "number"
+    }
+  ]
 }
 ```
 
-## 📁 Funcionalidades Disponíveis
+## 🎯 Regras de Negócio
 
-### 🎬 Filmes (/filmes)
+### Validação de Filmes
+- ✅ Título é obrigatório
+- ✅ Duração deve ser maior que 0
+- ✅ Sinopse deve ter no mínimo 10 caracteres
 
-- Visualização, cadastro e remoção.
-- Informações: título, sinopse, duração, classificação, gênero e datas
-  de exibição.
+### Validação de Sessões
+- ✅ Não permite criar sessão sem filme e sala
+- ✅ Data da sessão não pode ser anterior à data atual
 
-### 🏛️ Salas (/salas)
+### Validação de Salas
+- ✅ Nome é obrigatório
+- ✅ Capacidade deve ser número positivo
 
-- Cadastro de salas com número e capacidade.
+## 🛣️ Rotas da Aplicação
 
-### 🕒 Sessões (/sessoes)
+- `/` - Página inicial com cards de acesso rápido
+- `/filmes` - Gerenciamento de filmes
+- `/salas` - Gerenciamento de salas
+- `/sessoes` - Gerenciamento de sessões
+- `/ingressos` - Venda de ingressos
+- `/listar-sessoes` - Listagem pública de sessões
 
-- Agendamento com seleção de filme, sala, data e horário.
-- Listagem que combina dados de filmes e salas.
+## 🎨 Recursos de UI/UX
 
-### 🎟️ Venda de Ingressos
+- Design responsivo com Bootstrap 5
+- Ícones do Bootstrap Icons
+- Formulários com validação em tempo real
+- Feedback visual de erros
+- Cards e accordions para melhor organização
+- Navegação SPA sem reload de página
 
-- Venda associada a cada sessão.
-- Opção de ingresso **inteira** ou **meia** com cálculo automático do
-  valor.
+## 🧪 Scripts Disponíveis
 
-## 📏 Validações Utilizadas (Zod)
+```bash
+npm run dev      # Inicia o servidor de desenvolvimento Vite
+npm run build    # Build de produção
+npm run preview  # Preview do build de produção
+npm run server   # Inicia o json-server na porta 3000
+npm run lint     # Executa o ESLint
+```
 
-### Filmes
-
-- Título obrigatório.
-- Duração maior que zero.
-- Sinopse com mínimo de 10 caracteres.
-
-### Sessões
-
-- Seleção obrigatória de filme e sala.
-- Data não retroativa.
-
-## 🎨 Interface do Sistema
-
-- Layout responsivo com Bootstrap Grid.
-- Ícones via Bootstrap Icons.
-- Feedback visual para erros de validação.
