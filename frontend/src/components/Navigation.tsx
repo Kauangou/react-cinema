@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 export function Navigation() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <nav className="navbar navbar-expand-lg navbar-dark mb-4 navbar-red-gradient">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           Cinema
@@ -21,34 +21,34 @@ export function Navigation() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <Link className="nav-link" to="/filmes">
+              <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/filmes">
                 <i className="bi bi-film me-1"></i>
                 Filmes
-              </Link>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/salas">
+              <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/salas">
                 <i className="bi bi-door-open me-1"></i>
                 Salas
-              </Link>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/sessoes">
+              <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/sessoes">
                 <i className="bi bi-calendar-event me-1"></i>
                 Sessões
-              </Link>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/ingressos">
+              <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/ingressos">
                 <i className="bi bi-ticket-perforated me-1"></i>
                 Ingressos
-              </Link>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/listar-sessoes">
+              <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/listar-sessoes">
                 <i className="bi bi-camera-reels me-1"></i>
                 Listar Sessões
-              </Link>
+              </NavLink>
             </li>
           </ul>
         </div>
@@ -56,4 +56,3 @@ export function Navigation() {
     </nav>
   );
 }
-
