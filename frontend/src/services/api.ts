@@ -1,6 +1,20 @@
 import type { Filme, Sala, Sessao, Ingresso } from '../types';
 
-const API_URL = 'http://localhost:3000';
+// Decide API base: use env when provided; on Vercel use relative "/api"; locally default to json-server
+const isBrowser = typeof window !== 'undefined';
+const isVercelHost = isBrowser && /\.vercel\.app$/i.test(window.location.hostname);
+const API_BASE = import.meta.env.VITE_API_BASE
+  ? import.meta.env.VITE_API_BASE.replace(/\/$/, '')
+  : (isVercelHost ? '' : 'http://localhost:3000');
+
+function buildUrl(endpoint: string): string {
+  // On Vercel, call serverless functions under /api
+  if (isVercelHost || (API_BASE === '' && isBrowser)) {
+    return `/api/${endpoint.replace(/^\//, '')}`;
+  }
+  // Otherwise, call json-server using API_BASE
+  return `${API_BASE}/${endpoint.replace(/^\//, '')}`;
+}
 
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
@@ -11,17 +25,17 @@ async function handleResponse<T>(response: Response): Promise<T> {
 
 // Generic CRUD operations
 async function getAll<T>(endpoint: string): Promise<T[]> {
-  const response = await fetch(`${API_URL}/${endpoint}`);
+  const response = await fetch(buildUrl(endpoint));
   return handleResponse<T[]>(response);
 }
 
 async function getById<T>(endpoint: string, id: string): Promise<T> {
-  const response = await fetch(`${API_URL}/${endpoint}/${id}`);
+  const response = await fetch(buildUrl(`${endpoint}/${id}`));
   return handleResponse<T>(response);
 }
 
 async function create<T>(endpoint: string, data: Omit<T, 'id'>): Promise<T> {
-  const response = await fetch(`${API_URL}/${endpoint}`, {
+  const response = await fetch(buildUrl(endpoint), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -32,7 +46,7 @@ async function create<T>(endpoint: string, data: Omit<T, 'id'>): Promise<T> {
 }
 
 async function update<T>(endpoint: string, id: string, data: Partial<T>): Promise<T> {
-  const response = await fetch(`${API_URL}/${endpoint}/${id}`, {
+  const response = await fetch(buildUrl(`${endpoint}/${id}`), {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -43,7 +57,7 @@ async function update<T>(endpoint: string, id: string, data: Partial<T>): Promis
 }
 
 async function remove(endpoint: string, id: string): Promise<void> {
-  const response = await fetch(`${API_URL}/${endpoint}/${id}`, {
+  const response = await fetch(buildUrl(`${endpoint}/${id}`), {
     method: 'DELETE',
   });
   if (!response.ok) {
@@ -81,4 +95,3 @@ export const api = {
     delete: (id: string) => remove('ingressos', id),
   },
 };
-
