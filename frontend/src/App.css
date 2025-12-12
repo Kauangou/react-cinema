@@ -53,4 +53,24 @@
   background-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Navbar: dark red gradient background with white text */
+.navbar-red-gradient {
+  background: linear-gradient(135deg, #6a0f0f 0%, #8b0000 50%, #b22222 100%) !important;
+}
+.navbar-red-gradient .navbar-brand,
+.navbar-red-gradient .nav-link,
+.navbar-red-gradient .navbar-toggler {
+  color: #ffffff !important;
+}
+.navbar-red-gradient .navbar-toggler-icon {
+  filter: invert(1);
+}
 
+/* Active state highlight for navbar items */
+.navbar-red-gradient .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 0.35rem;
+}
+.navbar-red-gradient .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
